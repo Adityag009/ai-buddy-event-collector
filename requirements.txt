@@ -1,0 +1,20 @@
+# Database
+supabase==2.13.0
+
+# Environment
+python-dotenv==1.1.0
+
+# Scrapers
+instaloader==4.14.1
+crawl4ai==0.6.0
+beautifulsoup4==4.13.4
+httpx==0.28.1
+
+# LLM Extraction
+google-genai==1.14.0
+
+# Data validation
+pydantic==2.11.1
+
+# Utilities
+pyyaml==6.0.2
