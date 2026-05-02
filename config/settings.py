@@ -24,6 +24,23 @@ def _env_int(key: str, default: int) -> int:
         return default
 
 
+def _env_strip(key: str) -> str:
+    """Trim whitespace and outer quotes often pasted into .env by mistake."""
+    v = (os.getenv(key, "") or "").strip()
+    if len(v) >= 2 and v[0] in "\"'" and v[0] == v[-1]:
+        v = v[1:-1].strip()
+    return v
+
+
+def _normalize_https_base(url: str) -> str:
+    u = url.strip().rstrip("/")
+    if not u:
+        return u
+    if not u.startswith(("http://", "https://")):
+        u = "https://" + u
+    return u
+
+
 # Ollama / LangChain-style: OLLAMA_URL + /v1 (see extraction.openai_extractor.chat_completions_url_from_base)
 _ollama_host = (
     os.getenv("OLLAMA_URL", "").strip()
@@ -33,8 +50,8 @@ _ollama_host = (
 
 
 class Settings:
-    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
-    SUPABASE_KEY: str = os.getenv("SUPABASE_KEY", "")
+    SUPABASE_URL: str = _normalize_https_base(_env_strip("SUPABASE_URL"))
+    SUPABASE_KEY: str = _env_strip("SUPABASE_KEY")
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "gemini")
